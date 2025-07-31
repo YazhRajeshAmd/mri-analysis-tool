@@ -322,7 +322,54 @@ def process_mri_scan(file_path, patient_info="Not provided", image_type="MRI Bra
 
 # Create Gradio interface
 def create_interface():
-    with gr.Blocks(title="🏥 Advanced MRI Analysis on AMD MI300X", theme=gr.themes.Soft()) as interface:
+    # Custom CSS for AMD branding - fonts and colors only
+    custom_css = """
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    
+    * {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+    }
+    
+    /* AMD Red accent color */
+    .primary {
+        background: linear-gradient(135deg, #ED1C24 0%, #B71C1C 100%) !important;
+        border: none !important;
+    }
+    
+    .primary:hover {
+        background: linear-gradient(135deg, #B71C1C 0%, #8B0000 100%) !important;
+    }
+    
+    /* Tab styling with AMD red */
+    .tab-nav button.selected {
+        color: #ED1C24 !important;
+        border-bottom: 2px solid #ED1C24 !important;
+    }
+    
+    /* Headers with AMD red accents */
+    h1, h2, h3 {
+        color: #2c3e50 !important;
+    }
+    
+    /* Input focus states with AMD red */
+    input:focus, textarea:focus, select:focus {
+        border-color: #ED1C24 !important;
+        box-shadow: 0 0 0 2px rgba(237, 28, 36, 0.1) !important;
+    }
+    
+    /* Links and accents */
+    a {
+        color: #ED1C24 !important;
+    }
+    
+    /* Section headers */
+    h3 {
+        border-left: 4px solid #ED1C24 !important;
+        padding-left: 12px !important;
+    }
+    """
+    
+    with gr.Blocks(title="🏥 Advanced MRI Analysis on AMD MI300X", theme=gr.themes.Soft(), css=custom_css) as interface:
         gr.Markdown(
             """
             # 🏥 Advanced MRI Analysis System
