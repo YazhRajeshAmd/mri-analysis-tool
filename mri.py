@@ -370,11 +370,19 @@ def create_interface():
     """
     
     with gr.Blocks(title="🏥 Advanced MRI Analysis on AMD MI300X", theme=gr.themes.Soft(), css=custom_css) as interface:
+        # Header with AMD logo in top right corner
+        gr.HTML("""
+            <div style="position: relative; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; margin-bottom: 20px;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" style="position: absolute; top: 15px; right: 20px; height: 35px; width: auto;" />
+                <div style="padding-right: 120px;">
+                    <h1 style="margin: 0; color: #2c3e50; font-size: 2.2em; font-weight: 700;">🏥 Advanced MRI Analysis System</h1>
+                    <h3 style="margin: 5px 0 0 0; color: #ED1C24; font-size: 1.2em; font-weight: 600;">Powered by AMD MI300X GPU Acceleration</h3>
+                </div>
+            </div>
+        """)
+        
         gr.Markdown(
             """
-            # 🏥 Advanced MRI Analysis System
-            ### Powered by AMD MI300X GPU Acceleration
-            
             Upload MRI scans (DICOM, NIfTI, or standard image formats) for comprehensive AI-powered analysis including:
             - **Image Enhancement** with CLAHE and noise reduction
             - **Tissue Segmentation** using machine learning
@@ -402,9 +410,9 @@ def create_interface():
                 )
                 
                 image_type = gr.Dropdown(
-                    choices=["MRI Brain", "MRI Spine", "MRI Knee", "MRI Abdomen", "Other"],
+                    choices=["MRI Abdomen", "MRI Brain",  "MRI Knee", "MRI Spine", "Other"],
                     label="Image Type",
-                    value="MRI Brain"
+                    value="MRI Abdomen"
                 )
                 
                 analyze_btn = gr.Button("🔬 Analyze MRI Scan", variant="primary", size="lg")
