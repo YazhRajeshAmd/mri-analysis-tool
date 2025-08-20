@@ -322,74 +322,145 @@ def process_mri_scan(file_path, patient_info="Not provided", image_type="MRI Bra
 
 # Create Gradio interface
 def create_interface():
-    # Custom CSS for AMD branding - fonts and colors only
+    # Custom CSS for Teal branding - fonts and colors
     custom_css = """
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Arial:wght@400;500;600;700&display=swap');
     
     * {
-        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        font-family: 'Arial', Arial, sans-serif !important;
+        font-size: 16px;
     }
     
-    /* AMD Red accent color */
+    /* Teal accent color - PMS 3115 C */
     .primary {
-        background: linear-gradient(135deg, #ED1C24 0%, #B71C1C 100%) !important;
+        background: linear-gradient(135deg, #00C2DE 0%, #008AA8 100%) !important;
         border: none !important;
+        font-size: 16px !important;
+        padding: 12px 24px !important;
+        border-radius: 8px !important;
     }
     
     .primary:hover {
-        background: linear-gradient(135deg, #B71C1C 0%, #8B0000 100%) !important;
+        background: linear-gradient(135deg, #008AA8 0%, #006A80 100%) !important;
     }
     
-    /* Tab styling with AMD red */
+    /* Tab styling with Teal */
     .tab-nav button.selected {
-        color: #ED1C24 !important;
-        border-bottom: 2px solid #ED1C24 !important;
+        color: #00C2DE !important;
+        border-bottom: 2px solid #00C2DE !important;
     }
     
-    /* Headers with AMD red accents */
+    .tab-nav button:hover {
+        border-color: #00C2DE !important;
+        color: #00C2DE !important;
+        background: rgba(0, 194, 222, 0.05) !important;
+    }
+    
+    /* Headers with Teal accents */
     h1, h2, h3 {
         color: #2c3e50 !important;
+        font-weight: 600 !important;
     }
     
-    /* Input focus states with AMD red */
+    h1 {
+        font-size: 2.5em !important;
+    }
+    
+    h2 {
+        font-size: 2.0em !important;
+    }
+    
+    h3 {
+        font-size: 1.5em !important;
+    }
+    
+    /* Input focus states with Teal */
     input:focus, textarea:focus, select:focus {
-        border-color: #ED1C24 !important;
-        box-shadow: 0 0 0 2px rgba(237, 28, 36, 0.1) !important;
+        border-color: #00C2DE !important;
+        box-shadow: 0 0 0 2px rgba(0, 194, 222, 0.1) !important;
     }
     
     /* Links and accents */
     a {
-        color: #ED1C24 !important;
+        color: #00C2DE !important;
     }
     
     /* Section headers */
     h3 {
-        border-left: 4px solid #ED1C24 !important;
+        border-left: 4px solid #00C2DE !important;
         padding-left: 12px !important;
+    }
+    
+    /* Text areas and inputs */
+    textarea, input {
+        font-size: 16px !important;
+        line-height: 1.5 !important;
+    }
+    
+    /* File upload styling */
+    .gr-file {
+        border: 2px dashed #00C2DE !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+    }
+    
+    /* Button styling */
+    .gr-button {
+        font-size: 16px !important;
+        padding: 12px 24px !important;
+        border-radius: 8px !important;
+    }
+    
+    /* Dropdown styling */
+    select {
+        font-size: 16px !important;
+        padding: 10px !important;
+    }
+    
+    /* JSON display */
+    .gr-json {
+        font-size: 14px !important;
+    }
+    
+    /* Enhanced container styling */
+    .gradio-container {
+        max-width: 1600px !important;
+        margin: auto !important;
+        font-size: 16px !important;
     }
     """
     
     with gr.Blocks(title="🏥 Advanced MRI Analysis on AMD MI300X", theme=gr.themes.Soft(), css=custom_css) as interface:
         # Header with AMD logo in top right corner
         gr.HTML("""
-            <div style="position: relative; padding: 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; margin-bottom: 20px;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" style="position: absolute; top: 15px; right: 20px; height: 35px; width: auto;" />
+            <div style="position: relative; padding: 25px; background: linear-gradient(135deg, #00C2DE 0%, #008AA8 100%); border-radius: 15px; margin-bottom: 25px; color: white;">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" style="position: absolute; top: 20px; right: 25px; height: 40px; width: auto;" />
                 <div style="padding-right: 120px;">
-                    <h1 style="margin: 0; color: #2c3e50; font-size: 2.2em; font-weight: 700;">🏥 Advanced MRI Analysis System</h1>
-                    <h3 style="margin: 5px 0 0 0; color: #ED1C24; font-size: 1.2em; font-weight: 600;">Powered by AMD MI300X GPU Acceleration</h3>
+                    <h1 style="margin: 0; color: white; font-size: 2.5em; font-weight: 700;">🏥 Advanced MRI Analysis System</h1>
+                    <h3 style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 1.3em; font-weight: 600;">Powered by AMD MI300X GPU Acceleration • ROCm Platform</h3>
                 </div>
             </div>
         """)
         
         gr.Markdown(
             """
-            Upload MRI scans (DICOM, NIfTI, or standard image formats) for comprehensive AI-powered analysis including:
-            - **Image Enhancement** with CLAHE and noise reduction
-            - **Tissue Segmentation** using machine learning
-            - **Anomaly Detection** with statistical analysis
-            - **AI-Generated Medical Reports** using Large Language Models
+            **Advanced AI-Driven MRI Analysis on AMD Hardware**
             
-            ⚠️ **Disclaimer**: This tool is for research and educational purposes only. Clinical decisions should always be made by qualified medical professionals.
+            Upload MRI scans (DICOM, NIfTI, or standard image formats) for comprehensive AI-powered analysis including:
+            
+            ### 🔬 Core Analysis Features:
+            - **Image Enhancement**: CLAHE and advanced noise reduction algorithms
+            - **Tissue Segmentation**: Machine learning-based anatomical structure identification  
+            - **Anomaly Detection**: Statistical analysis and pattern recognition
+            - **AI Medical Reports**: Large Language Model-generated professional assessments
+            
+            ### 🚀 AMD MI300X Acceleration:
+            - **High Performance**: 192GB HBM3 memory for complex medical imaging
+            - **ROCm Platform**: Open-source GPU acceleration for healthcare applications
+            - **Real-time Processing**: GPU-accelerated image enhancement and ML inference
+            - **Scalable Architecture**: Multi-model analysis capabilities
+            
+            ⚠️ **Important Disclaimer**: This tool is designed for research and educational purposes only. All clinical decisions should be made by qualified medical professionals.
             """
         )
         
@@ -466,19 +537,28 @@ def create_interface():
         # Example section
         gr.Markdown(
             """
-            ### 💡 Example Usage
-            1. Upload an MRI scan file (DICOM .dcm, NIfTI .nii/.nii.gz, or standard image)
-            2. Optionally provide patient information for context
-            3. Select the appropriate image type
-            4. Click "Analyze MRI Scan" to start processing
-            5. Review the comprehensive analysis results across different tabs
+            ### 💡 Usage Instructions
             
-            ### 🚀 AMD MI300X Acceleration
-            This application leverages the powerful AMD MI300X GPU for:
-            - Fast image processing and enhancement
-            - Machine learning-based tissue segmentation
-            - AI-powered medical report generation
-            - Real-time anomaly detection algorithms
+            **Step-by-Step Analysis Process:**
+            1. **Upload MRI Scan**: Select DICOM (.dcm), NIfTI (.nii/.nii.gz), or standard image file
+            2. **Patient Context**: Optionally provide patient information for enhanced AI analysis
+            3. **Image Classification**: Choose the appropriate MRI type from the dropdown menu
+            4. **Start Analysis**: Click the "🔬 Analyze MRI Scan" button to begin processing
+            5. **Review Results**: Examine comprehensive analysis across multiple result tabs
+            
+            ### 🎯 Advanced Capabilities
+            
+            **AMD MI300X GPU Acceleration Benefits:**
+            - ⚡ **Ultra-fast Processing**: Sub-second image enhancement and segmentation
+            - 🧠 **AI-Powered Insights**: Large language model integration for medical reporting  
+            - 📊 **Quantitative Analysis**: Statistical metrics and anomaly scoring
+            - 🔍 **Multi-Modal Support**: DICOM, NIfTI, and standard image format compatibility
+            - 💾 **High Memory Bandwidth**: 192GB HBM3 for complex 3D volume processing
+            
+            **ROCm Platform Integration:**
+            - Open-source GPU computing for healthcare applications
+            - Optimized PyTorch and machine learning frameworks
+            - Professional-grade medical imaging pipeline acceleration
             """
         )
     
