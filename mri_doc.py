@@ -2,6 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import cv2
 import gradio as gr
+from gradio.components import Chatbot
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -421,90 +422,62 @@ def create_interface():
     .gr-json {
         font-size: 14px !important;
     }
-    
-    /* Enhanced container styling */
-    .gradio-container {
-        max-width: 1600px !important;
-        margin: auto !important;
-        font-size: 16px !important;
-    }
     """
     
-    with gr.Blocks(title="🏥 Advanced MRI Analysis on AMD MI300X", theme=gr.themes.Soft(), css=custom_css) as interface:
-        # Header with AMD logo in top right corner
-        gr.HTML("""
-            <div style="position: relative; padding: 25px; background: linear-gradient(135deg, #00C2DE 0%, #008AA8 100%); border-radius: 15px; margin-bottom: 25px; color: white;">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg" alt="AMD Logo" style="position: absolute; top: 20px; right: 25px; height: 40px; width: auto;" />
-                <div style="padding-right: 120px;">
-                    <h1 style="margin: 0; color: white; font-size: 2.5em; font-weight: 700;">🏥 Advanced MRI Analysis Demo</h1>
-                    <h3 style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 1.3em; font-weight: 600;">Powered by AMD MI300X GPU Acceleration • ROCm Platform</h3>
+    with gr.Blocks(title="Advanced MRI Analysis on AMD MI300X", theme=gr.themes.Soft(), css=custom_css) as interface:
+        gr.HTML(
+            """
+            <div style='position: relative; padding: 25px; background: linear-gradient(135deg, #00C2DE 0%, #008AA8 100%); border-radius: 15px; margin-bottom: 25px; color: white;'>
+                <img src='https://upload.wikimedia.org/wikipedia/commons/7/7c/AMD_Logo.svg' alt='AMD Logo' style='position: absolute; top: 20px; right: 25px; height: 40px; width: auto;' />
+                <div style='padding-right: 120px;'>
+                    <h1 style='margin: 0; color: white; font-size: 2.5em; font-weight: 700;'>Advanced MRI Analysis Demo</h1>
+                    <h3 style='margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 1.3em; font-weight: 600;'>Powered by AMD MI300X GPU Acceleration • ROCm Platform</h3>
                 </div>
             </div>
-        """)
-        
-        gr.Markdown(
-            """
-            **Advanced AI-Driven MRI Analysis on AMD Hardware**
-            
-            Upload MRI scans (DICOM, NIfTI, or standard image formats) for comprehensive AI-powered analysis including:
-            
-            ### 🔬 Core Analysis Features:
-            - **Image Enhancement**: CLAHE and advanced noise reduction algorithms
-            - **Tissue Segmentation**: Machine learning-based anatomical structure identification  
-            - **Anomaly Detection**: Statistical analysis and pattern recognition
-            - **AI Medical Reports**: Large Language Model-generated professional assessments
-            
-            ### 🚀 AMD MI300X Acceleration:
-            - **High Performance**: 192GB HBM3 memory for complex medical imaging
-            - **ROCm Platform**: Open-source GPU acceleration for healthcare applications
-            - **Real-time Processing**: GPU-accelerated image enhancement and ML inference
-            - **Scalable Architecture**: Multi-model analysis capabilities
-            
-            ⚠️ **Important Disclaimer**: This tool is designed for research and educational purposes only. All clinical decisions should be made by qualified medical professionals.
             """
         )
-        
         with gr.Row():
             with gr.Column(scale=1):
-                gr.Markdown("### 📁 Upload & Configuration")
-                
+                gr.Markdown("### Upload & Configuration")
                 file_input = gr.File(
                     label="Upload MRI Scan",
                     file_types=[".dcm", ".nii", ".nii.gz", ".png", ".jpg", ".jpeg"],
                     type="filepath"
                 )
-                
                 patient_info = gr.Textbox(
                     label="Patient Information (Optional)",
                     placeholder="Age: 45, Gender: Male, Clinical History: Headaches...",
                     lines=3
                 )
-                
                 image_type = gr.Dropdown(
                     choices=["MRI Abdomen", "MRI Brain",  "MRI Knee", "MRI Spine", "Other"],
                     label="Image Type",
                     value="MRI Abdomen"
                 )
                 
-                analyze_btn = gr.Button("🔬 Analyze MRI Scan", variant="primary", size="lg")
-            
+                analyze_btn = gr.Button("Analyze MRI Scan", variant="primary", size="lg")
+                # ...existing code...
+
+                # Popup Chatbot for AI Doctor follow-up
+                # ...existing code...
+                
             with gr.Column(scale=2):
-                gr.Markdown("### 📊 Analysis Results")
+                gr.Markdown("### Analysis Results")
                 
                 status_output = gr.Textbox(label="Status", interactive=False)
                 
                 with gr.Tabs():
-                    with gr.TabItem("🖼️ Visualizations"):
+                    with gr.TabItem("Visualizations"):
                         plot_output = gr.Plot(label="MRI Analysis Visualization")
                     
-                    with gr.TabItem("📋 AI Medical Report"):
+                    with gr.TabItem("AI Medical Report"):
                         ai_analysis_output = gr.Textbox(
                             label="AI-Generated Medical Analysis",
                             lines=15,
                             interactive=False
                         )
-                    
-                    with gr.TabItem("📈 Technical Analysis"):
+
+                    with gr.TabItem("Technical Analysis"):
                         tissue_analysis_output = gr.Textbox(
                             label="Tissue Segmentation Results",
                             lines=8,
@@ -517,9 +490,26 @@ def create_interface():
                             interactive=False
                         )
                     
-                    with gr.TabItem("📊 Summary Statistics"):
+                    with gr.TabItem("Summary Statistics"):
                         summary_output = gr.JSON(label="Processing Summary")
-        
+
+                gr.Markdown("""
+                ### Chat with AI Doctor
+                Ask follow-up questions about your MRI report below. The AI doctor uses Ollama to answer medical questions based on your report.
+                """)
+                chatbot = gr.Chatbot(label="Chat with AI Doctor")
+                chat_input = gr.Textbox(label="Your question to the AI doctor", placeholder="Type your question here and press Enter...")
+                def doctor_chat(history, user_message, report):
+                    prompt = f"You are an AI doctor. The patient MRI report is: {report}\nPatient question: {user_message}\nPlease answer as a medical professional."
+                    response = llm(prompt)
+                    history = history + [(user_message, response)]
+                    return history, ""
+                chat_input.submit(
+                    fn=doctor_chat,
+                    inputs=[chatbot, chat_input, ai_analysis_output],
+                    outputs=[chatbot, chat_input]
+                )
+                    
         # Event handlers
         analyze_btn.click(
             fn=process_mri_scan,
@@ -537,23 +527,23 @@ def create_interface():
         # Example section
         gr.Markdown(
             """
-            ### 💡 Usage Instructions
+            ### Usage Instructions
             
             **Step-by-Step Analysis Process:**
             1. **Upload MRI Scan**: Select DICOM (.dcm), NIfTI (.nii/.nii.gz), or standard image file
             2. **Patient Context**: Optionally provide patient information for enhanced AI analysis
             3. **Image Classification**: Choose the appropriate MRI type from the dropdown menu
-            4. **Start Analysis**: Click the "🔬 Analyze MRI Scan" button to begin processing
+            4. **Start Analysis**: Click the "Analyze MRI Scan" button to begin processing
             5. **Review Results**: Examine comprehensive analysis across multiple result tabs
             
-            ### 🎯 Advanced Capabilities
+            ### Advanced Capabilities
             
             **AMD MI300X GPU Acceleration Benefits:**
-            - ⚡ **Ultra-fast Processing**: Sub-second image enhancement and segmentation
-            - 🧠 **AI-Powered Insights**: Large language model integration for medical reporting  
-            - 📊 **Quantitative Analysis**: Statistical metrics and anomaly scoring
-            - 🔍 **Multi-Modal Support**: DICOM, NIfTI, and standard image format compatibility
-            - 💾 **High Memory Bandwidth**: 192GB HBM3 for complex 3D volume processing
+            - **Ultra-fast Processing**: Sub-second image enhancement and segmentation
+            - **AI-Powered Insights**: Large language model integration for medical reporting
+            - **Quantitative Analysis**: Statistical metrics and anomaly scoring
+            - **Multi-Modal Support**: DICOM, NIfTI, and standard image format compatibility
+            - **High Memory Bandwidth**: 192 GB HBM3 for complex 3D volume processing
             
             **ROCm Platform Integration:**
             - Open-source GPU computing for healthcare applications
