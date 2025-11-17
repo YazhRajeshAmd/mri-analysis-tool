@@ -48,7 +48,7 @@ A comprehensive medical imaging analysis tool that combines advanced computer vi
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/yourusername/mri-analysis-tool.git
+   git clone https://github.com/YazhRajeshAmd/mri-analysis-tool.git
    cd mri-analysis-tool
    ```
 
